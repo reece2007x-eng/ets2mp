@@ -8,15 +8,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Fallback credentials guarantee the app never boots with an empty URL
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://maokgjoenepqmgqogkdl.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_d9E-EAniv-ppm9VQgSQqdw_T-IGm9l1';
 
+// Initialize Supabase
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Healthcheck Route
 app.get('/', (req, res) => {
   res.json({ status: 'ETS2MP API & WebSocket Server Running' });
 });
 
+// HTTP & WebSocket Integration
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
