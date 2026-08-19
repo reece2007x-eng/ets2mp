@@ -20,6 +20,27 @@ app.get('/', (req, res) => {
   res.json({ status: 'ETS2MP API & WebSocket Server Running' });
 });
 
+// POST route to submit a completed job from your game/client
+app.post('/api/jobs', async (req, res) => {
+  const { player_name, cargo, source_city, destination_city, income } = req.body;
+  const { data, error } = await supabase
+    .from('jobs')
+    .insert([{ player_name, cargo, source_city, destination_city, income }]);
+
+  if (error) return res.status(400).json({ error: error.message });
+  res.json({ success: true, data });
+});
+
+// GET route to view all logged jobs
+app.get('/api/jobs', async (req, res) => {
+  const { data, error } = await supabase
+    .from('jobs')
+    .select('*');
+
+  if (error) return res.status(400).json({ error: error.message });
+  res.json(data);
+});
+
 // HTTP & WebSocket Integration
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
