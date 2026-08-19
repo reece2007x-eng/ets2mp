@@ -9,11 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Direct fallback URLs so it never crashes on startup
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://maokgjoenepqmgqogkdl.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_d9E-EAniv-ppm9VQgSQqdw_T-IGm9l1';
+
 // Supabase Client Connection
-const supabase = createClient(
-  process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_ANON_KEY || ''
-);
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Healthcheck Route
 app.get('/', (req, res) => {
